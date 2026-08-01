@@ -1,0 +1,43 @@
+services:
+  backend:
+    build:
+      context: ./server
+    container_name: it4409-task-manager-backend
+    environment:
+      SECRET_KEY: it4409_final_task_manager_secret_20252
+      DATABASE_URL: sqlite:////data/task_manager.db
+      ACCESS_TOKEN_EXPIRE_MINUTES: 10080
+      FRONTEND_ORIGIN: http://localhost:5174
+    volumes:
+      - sqlite_data:/data
+    ports:
+      - "8000:8000"
+
+  seed:
+    build:
+      context: ./server
+    container_name: it4409-task-manager-seed
+    environment:
+      SECRET_KEY: it4409_final_task_manager_secret_20252
+      DATABASE_URL: sqlite:////data/task_manager.db
+      ACCESS_TOKEN_EXPIRE_MINUTES: 10080
+      FRONTEND_ORIGIN: http://localhost:5174
+    volumes:
+      - sqlite_data:/data
+    command: ["python", "seed.py"]
+    profiles:
+      - tools
+
+  frontend:
+    build:
+      context: ./client
+    container_name: it4409-task-manager-frontend
+    environment:
+      VITE_API_URL: http://localhost:8000
+    ports:
+      - "5174:5173"
+    depends_on:
+      - backend
+
+volumes:
+  sqlite_data:

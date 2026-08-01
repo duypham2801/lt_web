@@ -1,0 +1,9 @@
+*.md
+.env
+.venv/
+__pycache__/
+*.py[cod]
+task_manager.db
+client/node_modules/
+client/dist/
+.DS_Store
