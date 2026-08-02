@@ -547,7 +547,7 @@ function CalendarView({ tasks, onDetail }) {
             <div key={`${day || "blank"}-${index}`} className={`calendar-day ${dayTasks.length ? "has-task" : ""}`}>
               {day && <strong>{day}</strong>}
               {dayTasks.slice(0, 2).map((task) => (
-                <button key={task.id} className={`calendar-task ${task.status}`} onClick={() => onDetail(task)}>{task.title}</button>
+                <button key={task.id} className={`calendar-task ${task.status}`} title={task.title} aria-label={`Xem chi tiết ${task.title}`} onClick={() => onDetail(task)}>{task.title}</button>
               ))}
               {dayTasks.length > 2 && <em>+{dayTasks.length - 2} task</em>}
             </div>
