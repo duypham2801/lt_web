@@ -18,7 +18,7 @@ export default function Layout() {
           <nav className="nav-actions">
             {user ? (
               <>
-                <span className="user-chip">{user.name}</span>
+                <Link className="btn btn-ghost" to="/config">Cấu hình</Link>
                 <button className="btn btn-ghost" onClick={handleLogout}>Đăng xuất</button>
               </>
             ) : (

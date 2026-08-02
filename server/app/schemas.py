@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel, EmailStr, Field, field_validator
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
 
 ALLOWED_CATEGORIES = {"study", "work", "personal", "other"}
 ALLOWED_STATUSES = {"todo", "doing", "done"}
@@ -34,11 +34,13 @@ class MeResponse(BaseModel):
 
 
 class TaskBase(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
     title: str = Field(min_length=3, max_length=120)
     description: str = Field(default="", max_length=1000)
     category: str = "study"
     status: str = "todo"
-    due_date: Optional[datetime] = None
+    due_date: Optional[datetime] = Field(default=None, alias="dueDate")
 
     @field_validator("category")
     @classmethod
@@ -65,13 +67,44 @@ class TaskUpdate(TaskBase):
 
 class TaskRead(TaskBase):
     id: int
-    user_id: int
-    created_at: datetime
-    updated_at: datetime
+    user_id: int = Field(alias="userId")
+    created_at: datetime = Field(alias="createdAt")
+    updated_at: datetime = Field(alias="updatedAt")
+    deleted_at: Optional[datetime] = Field(default=None, alias="deletedAt")
+
+
+class TaskStatsResponse(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    total: int
+    todo: int
+    doing: int
+    done: int
+    unfinished: int
+    overdue: int
+    due_soon: int = Field(alias="dueSoon")
+    deleted: int
+    by_category: dict[str, int] = Field(alias="byCategory")
+
+
+class AiSuggestRequest(BaseModel):
+    title: str = Field(min_length=3, max_length=120)
+
+
+class AiSuggestResponse(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    description: str
+    category: str
+    due_date: datetime = Field(alias="dueDate")
 
 
 class TaskListResponse(BaseModel):
     tasks: list[TaskRead]
+    total: int
+    page: int
+    pageSize: int
+    totalPages: int
 
 
 class TaskResponse(BaseModel):

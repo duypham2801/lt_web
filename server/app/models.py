@@ -28,5 +28,6 @@ class Task(SQLModel, table=True):
     due_date: Optional[datetime] = None
     created_at: datetime = Field(default_factory=now_utc)
     updated_at: datetime = Field(default_factory=now_utc)
+    deleted_at: Optional[datetime] = Field(default=None, index=True)
 
     user: User = Relationship(back_populates="tasks")

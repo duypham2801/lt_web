@@ -13,7 +13,7 @@ const statuses = [
 
 export { categories, statuses };
 
-export default function TaskForm({ value, onChange, onSubmit, submitLabel, error }) {
+export default function TaskForm({ value, onChange, onSubmit, submitLabel, error, aiLoading = false }) {
   function updateField(event) {
     onChange({ ...value, [event.target.name]: event.target.value });
   }
@@ -25,6 +25,7 @@ export default function TaskForm({ value, onChange, onSubmit, submitLabel, error
         Tên công việc <span>*</span>
         <input name="title" value={value.title} onChange={updateField} placeholder="Ví dụ: Ôn tập React" />
       </label>
+      {aiLoading && <div className="ai-hint">AI đang tự động gợi ý mô tả và danh mục...</div>}
       <label>
         Mô tả
         <textarea name="description" value={value.description} onChange={updateField} rows="4" placeholder="Ghi chú chi tiết cho công việc" />
